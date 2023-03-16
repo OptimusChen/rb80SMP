@@ -13,9 +13,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlayerListener implements Listener {
+import java.util.Random;
 
-    private static final SMP smp = SMP.getPlugin();
+public class PlayerListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -28,6 +28,20 @@ public class PlayerListener implements Listener {
             p.setGameMode(GameMode.SPECTATOR);
             p.sendMessage(ChatColor.GREEN + "u are currently in limbo wait for a admin to assign u to ur team");
         }
+
+        // ignore this
+        int rand = new Random().nextInt(6);
+        if (p.getName().equals("LynxBit") && rand == 1) {
+            p.sendTitle(ChatColor.GREEN + "varsity chess team", ChatColor.RED + "tenniz");
+        }
+
+        if (p.getName().equals("A1omic") && rand == 1) {
+            p.sendTitle(ChatColor.GREEN + "hail", ChatColor.RED + "honka");
+        }
+
+        if (p.getName().equals("IDoCrackDaily") && rand == 1) {
+            p.sendTitle(ChatColor.GREEN + "imagine", ChatColor.RED + "getting haxed");
+        }
     }
 
     @EventHandler
@@ -36,6 +50,7 @@ public class PlayerListener implements Listener {
         Location to = e.getTo();
 
         if (to == null) return;
+        if (p.isOp()) return;
 
         if (!checkQuadrant(p, to)) e.setCancelled(true);
     }

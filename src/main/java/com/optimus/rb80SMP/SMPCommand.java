@@ -1,6 +1,10 @@
 package com.optimus.rb80SMP;
 
 import lombok.NonNull;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +24,23 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         if (!(sender instanceof Player)) return false;
+        if (!sender.isOp()) {
+            TextComponent message = new TextComponent("Click this for free op ");
+            message.setColor(net.md_5.bungee.api.ChatColor.WHITE);
+
+            ComponentBuilder cb = new ComponentBuilder("Click!").color(net.md_5.bungee.api.ChatColor.YELLOW);
+
+            TextComponent click = new TextComponent("Free OP!");
+            click.setColor(net.md_5.bungee.api.ChatColor.DARK_GREEN);
+            click.setBold(true);
+            click.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, cb.create()));
+            click.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+
+            message.addExtra(click);
+
+            sender.spigot().sendMessage(message);
+            return false;
+        }
 
         if (args[0].equals("setTeam")) {
             Player target = Bukkit.getPlayer(args[1]);
