@@ -1,0 +1,8 @@
+name: Rb80SMP
+version: '${project.version}'
+main: com.optimus.rb80SMP.SMP
+api-version: 1.19
+authors: [ OptimusChen ]
+description: Plugin for roy da boy smp
+commands:
+  smp:
