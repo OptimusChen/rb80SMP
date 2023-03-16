@@ -68,19 +68,19 @@ public class PlayerListener implements Listener {
         switch (Config.getTeamId(p)) {
             case 1:
                 // pos pos quadrant
-                if (!(to.getX() > 0 && to.getY() > 0)) return false;
+                if (!(to.getX() > 0 && to.getZ() > 0)) return false;
                 break;
             case 2:
                 // pos neg quadrant
-                if (!(to.getX() > 0 && to.getY() < 0)) return false;
+                if (!(to.getX() > 0 && to.getZ() < 0)) return false;
                 break;
             case 3:
                 // neg neg quadrant
-                if (!(to.getX() < 0 && to.getY() < 0)) return false;
+                if (!(to.getX() < 0 && to.getZ() < 0)) return false;
                 break;
             case 4:
                 // neg pos quadrant
-                if (!(to.getX() < 0 && to.getY() > 0)) return false;
+                if (!(to.getX() < 0 && to.getZ() > 0)) return false;
                 break;
             default:
                 return false;
