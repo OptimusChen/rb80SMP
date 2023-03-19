@@ -38,7 +38,7 @@ public class Config {
                 playerFile.createNewFile();
 
                 config.set("teamId", -1);
-                config.set("playTime", 0);
+                config.set("teamLeader", false);
 
                 config.save(playerFile);
             } catch (IOException e) {

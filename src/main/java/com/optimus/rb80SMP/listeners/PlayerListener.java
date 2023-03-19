@@ -8,11 +8,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class PlayerListener implements Listener {
@@ -44,6 +48,8 @@ public class PlayerListener implements Listener {
         }
     }
 
+    private final HashMap<Player, Integer> violations = new HashMap<>();
+
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
@@ -52,19 +58,55 @@ public class PlayerListener implements Listener {
         if (to == null) return;
         if (p.isOp()) return;
 
-        if (!checkQuadrant(p, to)) e.setCancelled(true);
+        if (!checkQuadrant(p, to)) {
+            e.setCancelled(true);
+
+            violations.put(p, (violations.containsKey(p) ? violations.get(p) + 1 : 1));
+
+            if (violations.get(p) > 5) {
+                p.teleport(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
+                violations.put(p, 0);
+            }
+        }
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof Player) && !(e.getDamager() instanceof Player)) return;
+        if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
 
         if (Config.getTeamId((Player) e.getEntity()) == Config.getTeamId((Player) e.getDamager())) {
             e.setCancelled(true);
         }
     }
 
+    @EventHandler
+    public void onBlock(BlockBreakEvent e) {
+        Player p = e.getPlayer();
+
+        if (p.isOp()) return;
+
+        e.setCancelled(!checkQuadrant(p, e.getBlock().getLocation()));
+    }
+
+    @EventHandler
+    public void onBlock(BlockPlaceEvent e) {
+        Player p = e.getPlayer();
+
+        if (p.isOp()) return;
+
+        e.setCancelled(!checkQuadrant(p, e.getBlockPlaced().getLocation()));
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Player p = e.getPlayer();
+        e.setRespawnLocation(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
+    }
+
     private boolean checkQuadrant(Player p, Location to) {
+        String worldName = to.getWorld().getName();
+        if (worldName.contains("world_the_end")) return true;
+        if (!to.getWorld().getName().contains("world")) return true;
         switch (Config.getTeamId(p)) {
             case 1:
                 // pos pos quadrant
