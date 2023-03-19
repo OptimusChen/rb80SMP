@@ -21,6 +21,21 @@ import java.util.*;
 
 public class SMPCommand implements CommandExecutor, TabCompleter {
 
+    public static final HashMap<Integer, ChatColor> teamColors = new HashMap<Integer, ChatColor>() {{
+        put(1, ChatColor.RED);
+        put(2, ChatColor.BLUE);
+        put(3, ChatColor.GREEN);
+        put(4, ChatColor.YELLOW);
+    }};
+
+    public static void applyTeamColor(@NonNull Player player, int team) {
+        if (!teamColors.containsKey(team)) return;
+
+        ChatColor color = teamColors.get(team);
+
+        player.setDisplayName(color + "[" + color.name() + "] " + player.getName());
+    }
+
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         if (!(sender instanceof Player)) return false;
@@ -56,6 +71,7 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
             target.setGameMode(GameMode.SURVIVAL);
             target.teleport(SMP.getPlugin().getSpawnPoint(team));
             target.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 20));
+            applyTeamColor(target, team);
 
             target.sendMessage(ChatColor.GREEN + "You are now on team: " + team);
             sender.sendMessage(ChatColor.GREEN + "success");

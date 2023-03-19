@@ -2,6 +2,7 @@ package com.optimus.rb80SMP.listeners;
 
 import com.optimus.rb80SMP.Config;
 import com.optimus.rb80SMP.SMP;
+import com.optimus.rb80SMP.SMPCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -31,6 +32,10 @@ public class PlayerListener implements Listener {
             p.teleport(new Location(p.getWorld(), 0, 1000, 0));
             p.setGameMode(GameMode.SPECTATOR);
             p.sendMessage(ChatColor.GREEN + "u are currently in limbo wait for a admin to assign u to ur team");
+        } else {
+            int team = Config.getTeamId(p);
+
+            SMPCommand.applyTeamColor(p, team);
         }
 
         // ignore this
