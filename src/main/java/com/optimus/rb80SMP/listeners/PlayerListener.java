@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -53,8 +54,6 @@ public class PlayerListener implements Listener {
         }
     }
 
-    private final HashMap<Player, Integer> violations = new HashMap<>();
-
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
@@ -65,13 +64,6 @@ public class PlayerListener implements Listener {
 
         if (!checkQuadrant(p, to)) {
             e.setCancelled(true);
-
-            violations.put(p, (violations.containsKey(p) ? violations.get(p) + 1 : 1));
-
-            if (violations.get(p) > 5) {
-                p.teleport(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
-                violations.put(p, 0);
-            }
         }
     }
 
@@ -103,15 +95,22 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent e) {
+        if (e.getFrom().getName().equals("world_nether")) {
+            Player p = e.getPlayer();
+
+            if (!checkQuadrant(p, p.getLocation())) p.teleport(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
+        }
+    }
+
+    @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
         e.setRespawnLocation(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
     }
 
     private boolean checkQuadrant(Player p, Location to) {
-        String worldName = to.getWorld().getName();
-        if (worldName.contains("world_the_end")) return true;
-        if (!to.getWorld().getName().contains("world")) return true;
+        if (!to.getWorld().getName().equals("world")) return true;
         switch (Config.getTeamId(p)) {
             case 1:
                 // pos pos quadrant

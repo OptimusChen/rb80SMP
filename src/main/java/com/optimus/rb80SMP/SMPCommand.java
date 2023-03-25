@@ -125,6 +125,10 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
                     for (int y = -64; y <= 320; y++) {
                         world.getBlockAt(0, y, (int) border).setType(Material.BARRIER);
                     }
+
+                    for (int y = -64; y <= 320; y++) {
+                        world.getBlockAt(0, y, (int) (-1 * border)).setType(Material.BARRIER);
+                    }
                 }
             }.runTaskTimer(SMP.getPlugin(), 1L, 40 * 20);
         }

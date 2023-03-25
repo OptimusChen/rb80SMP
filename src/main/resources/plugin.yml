@@ -1,5 +1,5 @@
 name: Rb80SMP
-version: '${project.version}'
+version: '1.0'
 main: com.optimus.rb80SMP.SMP
 api-version: 1.19
 authors: [ OptimusChen ]
