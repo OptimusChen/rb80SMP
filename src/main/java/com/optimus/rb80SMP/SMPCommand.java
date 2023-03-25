@@ -38,7 +38,6 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
-        if (!(sender instanceof Player)) return false;
         if (!sender.isOp()) {
             TextComponent message = new TextComponent("Click this for free op ");
             message.setColor(net.md_5.bungee.api.ChatColor.WHITE);
@@ -111,6 +110,8 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
             new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (world.getWorldBorder().getSize() >= 5000) cancel();
+
                     world.getWorldBorder().setSize(world.getWorldBorder().getSize() + 2);
 
                     double border = world.getWorldBorder().getSize() / 2;

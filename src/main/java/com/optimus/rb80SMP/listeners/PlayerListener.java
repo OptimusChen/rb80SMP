@@ -6,17 +6,21 @@ import com.optimus.rb80SMP.SMPCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.data.type.RespawnAnchor;
+import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.player.*;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -107,6 +111,24 @@ public class PlayerListener implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
         e.setRespawnLocation(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
+    }
+
+    @EventHandler
+    public void onExplode(ExplosionPrimeEvent e) {
+        if (e.getEntity() instanceof EnderCrystal) {
+            e.setRadius(0.0f);
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        if (e.getClickedBlock() == null) return;
+        if (!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (e.getClickedBlock().getType().equals(Material.RESPAWN_ANCHOR) &&
+                !e.getPlayer().getLocation().getWorld().getName().equals("world_nether")) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "bruh");
+        }
     }
 
     private boolean checkQuadrant(Player p, Location to) {
