@@ -34,6 +34,7 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
         ChatColor color = teamColors.get(team);
 
         player.setDisplayName(color + "[" + color.name() + "] " + player.getName());
+        player.setPlayerListName(color + player.getName());
     }
 
     @Override

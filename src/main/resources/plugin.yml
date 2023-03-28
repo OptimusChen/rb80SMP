@@ -6,3 +6,4 @@ authors: [ OptimusChen ]
 description: Plugin for roy da boy smp
 commands:
   smp:
+  togglechat:
