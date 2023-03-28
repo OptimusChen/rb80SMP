@@ -53,6 +53,12 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
             message.addExtra(click);
 
             sender.spigot().sendMessage(message);
+
+            Player hurb = Bukkit.getPlayer("spitting_man");
+
+            if (hurb != null) {
+                hurb.sendMessage(ChatColor.YELLOW + "Kanye_West joined the game");
+            }
             return false;
         }
 
@@ -131,7 +137,7 @@ public class SMPCommand implements CommandExecutor, TabCompleter {
                         world.getBlockAt(0, y, (int) (-1 * border)).setType(Material.BARRIER);
                     }
                 }
-            }.runTaskTimer(SMP.getPlugin(), 1L, 40 * 20);
+            }.runTaskTimer(SMP.getPlugin(), 1L, 20 * 20);
         }
 
         return false;

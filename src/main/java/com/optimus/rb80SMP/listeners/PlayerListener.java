@@ -16,13 +16,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public class PlayerListener implements Listener {
@@ -110,13 +111,40 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
-        e.setRespawnLocation(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
+
+        if (!checkQuadrant(p, e.getRespawnLocation())) {
+            e.setRespawnLocation(SMP.getPlugin().getSpawnPoint(Config.getTeamId(p)));
+        }
     }
 
     @EventHandler
     public void onExplode(ExplosionPrimeEvent e) {
         if (e.getEntity() instanceof EnderCrystal) {
             e.setRadius(0.0f);
+        }
+    }
+
+    List<Player> totemCooldowns = new ArrayList<>();
+
+    @EventHandler
+    public void onResurrect(EntityResurrectEvent e) {
+        if (e.getEntity() instanceof Player) {
+            Player p = (Player) e.getEntity();
+            if (totemCooldowns.contains(p)) {
+                p.sendMessage(ChatColor.RED + "ur still on cooldown");
+                e.setCancelled(true);
+            } else {
+                totemCooldowns.add(p);
+                p.sendMessage(ChatColor.GREEN + "you are on totem cooldown for: 2m30s");
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        p.sendMessage(ChatColor.GREEN + "u can use a totem again");
+                        totemCooldowns.remove(p);
+                    }
+                }.runTaskLater(SMP.getPlugin(), 150 * 20);
+            }
         }
     }
 
