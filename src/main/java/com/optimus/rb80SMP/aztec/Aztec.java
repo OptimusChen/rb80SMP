@@ -19,6 +19,8 @@ import java.util.*;
 
 public class Aztec {
 
+    // TODO: aztec raids for totems, make obsidian sword obtainable, make obsidian plating obtainable
+
     private static final SMP plugin = SMP.getPlugin();
     private static Aztec instance;
 
