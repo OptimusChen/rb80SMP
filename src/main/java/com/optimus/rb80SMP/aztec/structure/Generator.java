@@ -1,6 +1,7 @@
 package com.optimus.rb80SMP.aztec.structure;
 
 import com.optimus.rb80SMP.SMP;
+import com.optimus.rb80SMP.aztec.Aztec;
 import com.optimus.rb80SMP.aztec.AztecItem;
 import com.optimus.rb80SMP.util.Util;
 import lombok.Getter;
@@ -115,6 +116,7 @@ public class Generator {
 
         for (Block b : blocks) {
             if (!b.getType().equals(Material.CHEST)) continue;
+            if (Aztec.getInstance().isPortal(b)) continue;
 
             Chest chest = (Chest) b.getState();
 

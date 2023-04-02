@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
@@ -72,22 +73,34 @@ public class AztecListener implements Listener {
     }
 
     @EventHandler
+    public void onCreate(PortalCreateEvent e) {
+        if (!e.getWorld().getName().equals("aztec")) return;
+
+        e.setCancelled(true);
+    }
+
+    @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Location below = e.getTo().clone().subtract(0, 1, 0);
+        Player p = e.getPlayer();
 
         if (below.getBlock().getType().equals(Material.END_PORTAL)) {
-            Location pos1 = below.getBlock().getLocation().clone().add(1, 0, 1);
-            Location pos2 = below.getBlock().getLocation().clone().add(-1, 0, -1);
+            if (e.getTo().getWorld().getName().equals("aztec")) {
+                World world = Bukkit.getWorld("world");
+                p.teleport(world.getSpawnLocation());
+            } else {
+                Location pos1 = below.getBlock().getLocation().clone().add(1, 0, 1);
+                Location pos2 = below.getBlock().getLocation().clone().add(-1, 0, -1);
 
-            List<Block> blocks = Util.blocksFromTwoPoints(pos1, pos2);
+                List<Block> blocks = Util.blocksFromTwoPoints(pos1, pos2);
 
-            for (Block b : blocks) {
-                if (b.getType().equals(Material.LODESTONE)) {
-                    Player p = e.getPlayer();
-                    World world = Bukkit.getWorld("aztec");
+                for (Block b : blocks) {
+                    if (b.getType().equals(Material.LODESTONE)) {
+                        World world = Bukkit.getWorld("aztec");
 
-                    p.teleport(world.getSpawnLocation());
-                    break;
+                        p.teleport(world.getSpawnLocation());
+                        break;
+                    }
                 }
             }
         }
@@ -101,7 +114,7 @@ public class AztecListener implements Listener {
 
         Location loc = new Location(e.getTo().getWorld(), x, y, z);
 
-        if (Util.random(0, 500) == 0) {
+        if (Util.random(0, 1000) == 0) {
             switch (Util.random(0, 2)) {
                 case 0:
                     new LoneWanderer().spawn(loc);

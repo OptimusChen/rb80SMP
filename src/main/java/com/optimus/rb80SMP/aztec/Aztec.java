@@ -75,8 +75,6 @@ public class Aztec {
     }
 
     public boolean isPortal(Block block) {
-        if (!block.getType().equals(Material.LODESTONE)) return false;
-
         Location below = block.getLocation().clone().subtract(0, 1, 0);
 
         return below.getBlock().getType().equals(Material.BARRIER);

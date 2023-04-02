@@ -6,10 +6,8 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.optimus.rb80SMP.SMP;
 import com.optimus.rb80SMP.aztec.AztecItem;
 import com.optimus.rb80SMP.util.Util;
-import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
-import net.citizensnpcs.trait.SkinTrait;
 import net.minecraft.server.level.EntityPlayer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -17,11 +15,9 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -104,8 +100,22 @@ public class Tezcatlipoca extends NPCEntity {
         Block b = aztec.getBlockAt(0, 63, 0);
 
         if (!b.getType().equals(Material.END_PORTAL)) {
-            Bukkit.broadcastMessage(ChatColor.GOLD + "Tezcatlipoca has been killed and his curse has been broken.");
+            Bukkit.broadcastMessage(ChatColor.GOLD + "Tezcatlipoca has been killed and his curse has been broken. A portal back to the overworld has opened at 0,0");
 
+            Location pos1 = b.getLocation().clone().add(1, 0, 1);
+            Location pos2 = b.getLocation().clone().subtract(1, 0, 1);
+
+            for (Block block : Util.blocksFromTwoPoints(pos1, pos2)) block.setType(Material.END_PORTAL);
+
+            pos1 = pos1.subtract(0, 1, 0);
+            pos2 = pos2.subtract(0, 1, 0);
+
+            for (Block block : Util.blocksFromTwoPoints(pos1, pos2)) block.setType(Material.BEDROCK);
+
+            pos1 = pos1.add(1, 1, 1);
+            pos2 = pos2.add(-1, 1, -1);
+
+            for (Block block : Util.blocksFromTwoPoints(pos1, pos2)) if (block.getType().equals(Material.AIR)) block.setType(Material.BEDROCK);
         }
     }
 

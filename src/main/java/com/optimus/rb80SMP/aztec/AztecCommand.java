@@ -21,7 +21,7 @@ public class AztecCommand implements CommandExecutor {
             if (args[1].equals("purempecha")) {
                 new Purempecha().spawn(p.getLocation());
             } else {
-                new TribeMember().spawn(p.getLocation());
+                new Tezcatlipoca().spawn(p.getLocation());
             }
         } else if (args[0].equals("generatestructures")) {
             for (int i = 0; i < 15; i++) {
