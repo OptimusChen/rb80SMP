@@ -4,6 +4,7 @@ import com.optimus.rb80SMP.Config;
 import com.optimus.rb80SMP.SMP;
 import com.optimus.rb80SMP.SMPCommand;
 import com.optimus.rb80SMP.ToggleChatCommand;
+import com.optimus.rb80SMP.aztec.Aztec;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.entity.Arrow;
@@ -63,6 +64,13 @@ public class PlayerListener implements Listener {
         if (p.getName().equals("rb80") && rand == 1) {
             p.sendTitle(ChatColor.GREEN + "roy da boy", ChatColor.RED + "onetwothree");
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Aztec.getInstance().playerTick(p);
+            }
+        }.runTaskTimer(SMP.getPlugin(), 1, 1);
     }
 
     @EventHandler
@@ -90,16 +98,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Arrow && e.getEntity() instanceof Player) {
-            Arrow arrow = (Arrow) e.getDamager();
-            if (arrow.getShooter() instanceof Player) {
-                Player shooter = (Player) arrow.getShooter();
-                if (Config.getTeamId((Player) e.getEntity()) == Config.getTeamId(shooter)) {
-                    e.setCancelled(true);
-                }
-            }
-        }
-
         if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Player)) return;
 
         if (Config.getTeamId((Player) e.getEntity()) == Config.getTeamId((Player) e.getDamager())) {
@@ -186,9 +184,15 @@ public class PlayerListener implements Listener {
             int[] matricies = {0, 2, 6, 8};
 
             for (int i : matricies) {
-                // andrew tate ! ! ! !!
                 ItemStack[] matrix = e.getInventory().getMatrix();
                 matrix[i].setAmount(matrix[i].getAmount() - 15);
+            }
+        } else if (item.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Key to the One World")) {
+            int[] matricies = {5};
+
+            for (int i : matricies) {
+                ItemStack[] matrix = e.getInventory().getMatrix();
+                matrix[i].setAmount(matrix[i].getAmount() - 63);
             }
         }
     }
@@ -209,7 +213,6 @@ public class PlayerListener implements Listener {
         if (e.getClickedBlock().getType().equals(Material.RESPAWN_ANCHOR) &&
                 !e.getPlayer().getLocation().getWorld().getName().equals("world_nether")) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.RED + "bruh");
         }
     }
 

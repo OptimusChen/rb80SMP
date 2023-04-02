@@ -76,5 +76,33 @@
             <version>1.19.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.30-b2797</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/dependencies/Citizens-2.0.30-b2797.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.2.13</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/dependencies/worldedit-bukkit-7.2.13.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>spigot</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.19.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/dependencies/spigot-1.19.3-R0.1-SNAPSHOT-remapped.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>authlib</groupId>
+            <artifactId>authlib</artifactId>
+            <version>3.11.49</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/dependencies/authlib-3.11.49.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

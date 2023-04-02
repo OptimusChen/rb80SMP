@@ -1,5 +1,9 @@
 package com.optimus.rb80SMP;
 
+import com.optimus.rb80SMP.aztec.Aztec;
+import com.optimus.rb80SMP.aztec.AztecCommand;
+import com.optimus.rb80SMP.aztec.AztecConfig;
+import com.optimus.rb80SMP.aztec.enchantment.Glow;
 import com.optimus.rb80SMP.listeners.PlayerListener;
 import lombok.Data;
 import lombok.Setter;
@@ -14,11 +18,14 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 public final class SMP extends JavaPlugin {
 
     public static boolean expandingBorder = false;
+    public Glow glow;
+    private Aztec aztec;
 
     @Override
     public void onEnable() {
@@ -30,6 +37,7 @@ public final class SMP extends JavaPlugin {
         main.setTabCompleter(cmd);
 
         getCommand("togglechat").setExecutor(new ToggleChatCommand());
+        getCommand("aztec").setExecutor(new AztecCommand());
 
         ItemStack expander = new ItemStack(Material.DIAMOND_PICKAXE);
         ItemMeta meta = expander.getItemMeta();
@@ -56,11 +64,28 @@ public final class SMP extends JavaPlugin {
         recipe.setIngredient('e', Material.NETHER_STAR);
 
         Bukkit.addRecipe(recipe);
+
+        aztec = new Aztec();
+
+        glow = new Glow();
+
+        registerEnchantment(glow);
     }
 
     @Override
     public void onDisable() {
+        aztec.disable();
+    }
 
+    private void registerEnchantment(Enchantment enchantment) {
+        try {
+            Field field = Enchantment.class.getDeclaredField("acceptingNew");
+            field.setAccessible(true);
+            field.set(null, true);
+            Enchantment.registerEnchantment(enchantment);
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void messageTeam(Player p, String message) {
