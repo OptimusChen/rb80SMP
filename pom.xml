@@ -104,5 +104,12 @@
             <scope>system</scope>
             <systemPath>${basedir}/dependencies/authlib-3.11.49.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>enchantmentapi</groupId>
+            <artifactId>enchantmentapi</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/dependencies/EnchantmentAPI-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

@@ -1,6 +1,8 @@
 package com.optimus.rb80SMP.aztec;
 
+import com.optimus.rb80SMP.SMP;
 import com.optimus.rb80SMP.util.ItemBuilder;
+import enchantmentapi.enchantmentapi.EnchantmentAPI;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -17,8 +19,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public enum AztecItem {
 
-    XIUHCOATL_SWORD(new ItemBuilder(ChatColor.YELLOW + "Xiuhcoatl Sword", Material.NETHERITE_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 4).addEnchantment(Enchantment.FIRE_ASPECT, 2).toItemStack()),
-    FEATHERED_BOW(new ItemBuilder(ChatColor.YELLOW + "Feathered Serpent Bow", Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 4).addEnchantment(Enchantment.ARROW_FIRE, 1).addEnchantment(Enchantment.ARROW_INFINITE, 1).toItemStack()),
+    XIUHCOATL_SWORD(new ItemBuilder(ChatColor.YELLOW + "Xiuhcoatl Sword", Material.DIAMOND_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 3).addEnchantment(Enchantment.FIRE_ASPECT, 2).toItemStack()),
+    FEATHERED_BOW(new ItemBuilder(ChatColor.YELLOW + "Feathered Serpent Bow", Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 3).addEnchantment(Enchantment.ARROW_FIRE, 1).addEnchantment(Enchantment.ARROW_INFINITE, 1).toItemStack()),
     OBSIDIAN_PLATING(new ItemBuilder(ChatColor.YELLOW + "Obsidian Plating", Material.OBSIDIAN).addEnchantmentGlint().addLore("&7Combine with diamond", "&7armor to make", "&7obsidian armor.").toItemStack()),
     BLOOD(new ItemBuilder(ChatColor.RED + "Blood", Material.REDSTONE).addLore("&7Summoning Item").toItemStack()),
     HEART(new ItemBuilder(ChatColor.RED + "Heart", Material.BEETROOT).addLore("&7Summoning Item").toItemStack()),
@@ -29,7 +31,8 @@ public enum AztecItem {
     JAGUAR_TOTEM(new ItemBuilder(ChatColor.YELLOW + "Jaguar Totem", Material.TOTEM_OF_UNDYING).toItemStack()),
     EAGLE_TOTEM(new ItemBuilder(ChatColor.GREEN + "Eagle Totem", Material.TOTEM_OF_UNDYING).toItemStack()),
     ARROW_TOTEM(new ItemBuilder(ChatColor.RED + "Arrow Totem", Material.TOTEM_OF_UNDYING).toItemStack()),
-    SPEAR(new ItemBuilder(ChatColor.YELLOW + "Spear", Material.TRIDENT).addEnchantmentGlint().addLore("&71 use trident").toItemStack());
+    CHIMALI_BOOK(EnchantmentAPI.addEnchantment(new ItemStack(Material.ENCHANTED_BOOK), SMP.getPlugin().chimali, 1)),
+    SPEAR(new ItemBuilder(ChatColor.YELLOW + "Spear", Material.TRIDENT).addEnchantmentGlint().addLore("&7one use trident").toItemStack());
 
     private final ItemStack item;
 

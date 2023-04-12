@@ -4,6 +4,8 @@ main: com.optimus.rb80SMP.SMP
 api-version: 1.19
 authors: [ OptimusChen ]
 description: Plugin for roy da boy smp
+depend:
+  - EnchantmentAPI
 commands:
   smp:
   togglechat:
