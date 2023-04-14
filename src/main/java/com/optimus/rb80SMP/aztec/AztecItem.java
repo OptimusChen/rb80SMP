@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public enum AztecItem {
 
-    XIUHCOATL_SWORD(new ItemBuilder(ChatColor.YELLOW + "Xiuhcoatl Sword", Material.DIAMOND_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 3).addEnchantment(Enchantment.FIRE_ASPECT, 2).toItemStack()),
+    XIUHCOATL_SWORD(EnchantmentAPI.addEnchantment(new ItemBuilder(ChatColor.YELLOW + "Xiuhcoatl Sword", Material.DIAMOND_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 3).addEnchantment(Enchantment.FIRE_ASPECT, 2).toItemStack(), SMP.getPlugin().chimali, 3)),
     FEATHERED_BOW(new ItemBuilder(ChatColor.YELLOW + "Feathered Serpent Bow", Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 3).addEnchantment(Enchantment.ARROW_FIRE, 1).addEnchantment(Enchantment.ARROW_INFINITE, 1).toItemStack()),
     OBSIDIAN_PLATING(new ItemBuilder(ChatColor.YELLOW + "Obsidian Plating", Material.OBSIDIAN).addEnchantmentGlint().addLore("&7Combine with diamond", "&7armor to make", "&7obsidian armor.").toItemStack()),
     BLOOD(new ItemBuilder(ChatColor.RED + "Blood", Material.REDSTONE).addLore("&7Summoning Item").toItemStack()),
@@ -31,6 +31,7 @@ public enum AztecItem {
     JAGUAR_TOTEM(new ItemBuilder(ChatColor.YELLOW + "Jaguar Totem", Material.TOTEM_OF_UNDYING).toItemStack()),
     EAGLE_TOTEM(new ItemBuilder(ChatColor.GREEN + "Eagle Totem", Material.TOTEM_OF_UNDYING).toItemStack()),
     ARROW_TOTEM(new ItemBuilder(ChatColor.RED + "Arrow Totem", Material.TOTEM_OF_UNDYING).toItemStack()),
+    TEPULI_BOOK(EnchantmentAPI.addEnchantment(new ItemStack(Material.ENCHANTED_BOOK), SMP.getPlugin().tepuli, 1)),
     CHIMALI_BOOK(EnchantmentAPI.addEnchantment(new ItemStack(Material.ENCHANTED_BOOK), SMP.getPlugin().chimali, 1)),
     SPEAR(new ItemBuilder(ChatColor.YELLOW + "Spear", Material.TRIDENT).addEnchantmentGlint().addLore("&7one use trident").toItemStack());
 

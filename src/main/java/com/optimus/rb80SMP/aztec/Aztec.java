@@ -122,9 +122,28 @@ public class Aztec {
                         villager.setVillagerType(Villager.Type.JUNGLE);
 
                         world.spawnParticle(Particle.VILLAGER_HAPPY, villager.getLocation().clone().add(0, 2, 0), 10);
+
+                        List<MerchantRecipe> recipes = new ArrayList<>(Arrays.asList(
+                                createRecipe(2, new ItemStack(Material.EMERALD, 5), null, new ItemStack(Material.COCOA_BEANS), 16),
+                                createRecipe(2, new ItemStack(Material.COCOA_BEANS, 3), null, new ItemStack(Material.DIAMOND), 12)
+                        ));
+
+                        villager.setRecipes(recipes);
                     }
                 }
             }
         }.runTaskTimer(SMP.getPlugin(), 1, 20L);
+    }
+
+    private MerchantRecipe createRecipe(int xp, ItemStack in, ItemStack in2, ItemStack out, int max) {
+        MerchantRecipe recipe = new MerchantRecipe(out, max);
+
+        recipe.addIngredient(in);
+        if (in2 != null) recipe.addIngredient(in2);
+
+        recipe.setExperienceReward(true);
+        recipe.setVillagerExperience(xp);
+
+        return recipe;
     }
 }

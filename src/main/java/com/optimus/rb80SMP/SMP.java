@@ -2,13 +2,11 @@ package com.optimus.rb80SMP;
 
 import com.optimus.rb80SMP.aztec.Aztec;
 import com.optimus.rb80SMP.aztec.AztecCommand;
-import com.optimus.rb80SMP.aztec.AztecConfig;
 import com.optimus.rb80SMP.aztec.enchantment.Chimali;
+import com.optimus.rb80SMP.aztec.enchantment.Tepuli;
 import com.optimus.rb80SMP.aztec.enchantment.Glow;
 import com.optimus.rb80SMP.listeners.PlayerListener;
 import enchantmentapi.enchantmentapi.EnchantmentAPI;
-import lombok.Data;
-import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +17,6 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.C;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -27,6 +24,7 @@ import java.util.Arrays;
 public final class SMP extends JavaPlugin {
 
     public static boolean expandingBorder = false;
+    public Tepuli tepuli;
     public Chimali chimali;
     public Glow glow;
     private Aztec aztec;
@@ -73,9 +71,11 @@ public final class SMP extends JavaPlugin {
 
         glow = new Glow();
         chimali = new Chimali();
+        tepuli = new Tepuli();
 
         registerEnchantment(glow);
         EnchantmentAPI.registerEnchantment(chimali);
+        EnchantmentAPI.registerEnchantment(tepuli);
     }
 
     @Override

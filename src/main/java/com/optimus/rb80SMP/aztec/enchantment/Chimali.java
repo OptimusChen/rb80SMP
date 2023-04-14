@@ -33,7 +33,7 @@ public class Chimali extends CustomEnchantment {
 
     @Override
     protected int getMaxLevel() {
-        return 5;
+        return 3;
     }
 
     @Override
@@ -48,6 +48,19 @@ public class Chimali extends CustomEnchantment {
             Entity entity = e.getEntity();
 
             if (EnchantmentAPI.hasEnchantment(p.getItemInHand(), this)) {
+                boolean tepuli = false;
+
+                if (entity instanceof Player) {
+                    Player target = (Player) entity;
+                    ItemStack legs = target.getInventory().getLeggings();
+
+                    if (legs != null && EnchantmentAPI.hasEnchantment(legs, SMP.getPlugin().tepuli)) {
+                        tepuli = true;
+                    }
+                }
+
+                if (tepuli) return;
+
                 if (affected.contains(entity)) return;
 
                 affected.add(entity);

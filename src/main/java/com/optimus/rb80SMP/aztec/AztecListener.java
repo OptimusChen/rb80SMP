@@ -5,16 +5,14 @@ import com.optimus.rb80SMP.aztec.entity.npc.LoneWanderer;
 import com.optimus.rb80SMP.aztec.entity.npc.Purempecha;
 import com.optimus.rb80SMP.aztec.entity.npc.Tezcatlipoca;
 import com.optimus.rb80SMP.aztec.entity.npc.TribeMember;
+import com.optimus.rb80SMP.aztec.event.VillagerLevelUpEvent;
 import com.optimus.rb80SMP.aztec.gui.CodexTable;
 import com.optimus.rb80SMP.util.Util;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.type.RespawnAnchor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,18 +20,18 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.PortalCreateEvent;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Merchant;
-import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
@@ -153,6 +151,15 @@ public class AztecListener implements Listener {
         e.getPlayer().openInventory(new CodexTable());
     }
 
+    private void addRecipe(List<MerchantRecipe> recipes, MerchantRecipe recipe) {
+        for (MerchantRecipe r : recipes) {
+            if (r.getResult().equals(recipe.getResult()) && r.getIngredients().get(0).equals(recipe.getIngredients().get(0))) return;
+            if (r.getResult().getType().equals(Material.ENCHANTED_BOOK) && recipe.getResult().getType().equals(Material.ENCHANTED_BOOK)) return;
+        }
+
+        recipes.add(recipe);
+    }
+
     @EventHandler
     public void onInteract(PlayerInteractAtEntityEvent e) {
         Entity entity = e.getRightClicked();
@@ -162,35 +169,26 @@ public class AztecListener implements Listener {
         Villager villager = (Villager) entity;
 
         if (villager.getProfession().equals(Villager.Profession.NITWIT) && villager.getVillagerType().equals(Villager.Type.JUNGLE)) {
+            int level = villager.getVillagerLevel();
 
-            List<MerchantRecipe> recipes = new ArrayList<>(Arrays.asList(
-                    createRecipe(2, new ItemStack(Material.EMERALD, 5), null, new ItemStack(Material.COCOA_BEANS), 16),
-                    createRecipe(2, new ItemStack(Material.COCOA_BEANS, 3), null, new ItemStack(Material.DIAMOND), 12)
-            ));
+            List<MerchantRecipe> recipes = new ArrayList<>(villager.getRecipes());
 
-            if (villager.getVillagerLevel() >= 2) {
-                recipes.add(createRecipe(10, new ItemStack(Material.PURPLE_DYE), null, new ItemStack(Material.COCOA_BEANS, 3), 10));
-                recipes.add(createRecipe(10, new ItemStack(Material.COCOA_BEANS, 10), null, new ItemStack(Material.SCUTE), 4));
-            }
-
-            if (villager.getVillagerLevel() >= 3) {
-                recipes.add(createRecipe(15, new ItemStack(Material.COCOA_BEANS, 10), null, new ItemStack(Material.SPYGLASS), 4));
-                recipes.add(createRecipe(15, new ItemStack(Material.COCOA_BEANS, 5), null, new ItemStack(Material.AXOLOTL_BUCKET), 5));
-            }
-
-            if (villager.getVillagerLevel() >= 4) {
-                recipes.add(createRecipe(20, new ItemStack(Material.COCOA_BEANS, 48), new ItemStack(Material.GOLD_INGOT, 16), AztecItem.SPEAR.getItem(), 4));
-                recipes.add(createRecipe(20, new ItemStack(Material.IRON_INGOT, 5), null, new ItemStack(Material.COCOA_BEANS), 16));
-            }
-
-            if (villager.getVillagerLevel() >= 5) {
-                recipes.add(createRecipe(120, new ItemStack(Material.COCOA_BEANS, 64), new ItemStack(Material.BOOK), new ItemStack(Material.ENCHANTED_BOOK), 5));
-                recipes.add(createRecipe(120, new ItemStack(Material.COCOA_BEANS, 32), new ItemStack(Material.NAUTILUS_SHELL, 4), new ItemStack(Material.HEART_OF_THE_SEA), 2));
+            if (level == 2) {
+                addRecipe(recipes, createRecipe(10, new ItemStack(Material.PURPLE_DYE), null, new ItemStack(Material.COCOA_BEANS, 3), 16));
+                addRecipe(recipes, createRecipe(10, new ItemStack(Material.COCOA_BEANS, 10), null, new ItemStack(Material.SCUTE), 8));
+            } else if (level == 3) {
+                addRecipe(recipes, createRecipe(15, new ItemStack(Material.COCOA_BEANS, 10), null, new ItemStack(Material.SPYGLASS), 8));
+                addRecipe(recipes, createRecipe(15, new ItemStack(Material.COCOA_BEANS, 5), null, new ItemStack(Material.AXOLOTL_BUCKET), 8));
+            } else if (level == 4) {
+                addRecipe(recipes, createRecipe(20, new ItemStack(Material.COCOA_BEANS, 48), new ItemStack(Material.GOLD_INGOT, 16), AztecItem.SPEAR.getItem(), 5));
+                addRecipe(recipes, createRecipe(20, new ItemStack(Material.IRON_INGOT, 5), null, new ItemStack(Material.COCOA_BEANS), 16));
+            } else if (level == 5) {
+                addRecipe(recipes, createRecipe(120, new ItemStack(Material.COCOA_BEANS, 32), new ItemStack(Material.NAUTILUS_SHELL, 4), new ItemStack(Material.HEART_OF_THE_SEA), 4));
+                if (Util.random(0, 1) == 0) addRecipe(recipes, createRecipe(120, new ItemStack(Material.COCOA_BEANS, 64), new ItemStack(Material.BOOK), AztecItem.CHIMALI_BOOK.getItem(), 8));
+                else addRecipe(recipes, createRecipe(120, new ItemStack(Material.COCOA_BEANS, 64), new ItemStack(Material.BOOK), AztecItem.TEPULI_BOOK.getItem(), 8));
             }
 
             villager.setRecipes(recipes);
-
-            e.getPlayer().openMerchant(villager, true);
         }
     }
 
@@ -276,4 +274,27 @@ public class AztecListener implements Listener {
 
         return recipe;
     }
+
+    private Entity getTarget(Entity entity) {
+        if (entity == null)
+            return null;
+        Entity target = null;
+        final double threshold = 1;
+        for (Entity other : entity.getNearbyEntities(5, 5, 5)) {
+            final Vector n = other.getLocation().toVector()
+                    .subtract(entity.getLocation().toVector());
+            if (entity.getLocation().getDirection().normalize().crossProduct(n)
+                    .lengthSquared() < threshold
+                    && n.normalize().dot(
+                    entity.getLocation().getDirection().normalize()) >= 0) {
+                if (target == null
+                        || target.getLocation().distanceSquared(
+                        entity.getLocation()) > other.getLocation()
+                        .distanceSquared(entity.getLocation()))
+                    target = other;
+            }
+        }
+        return target;
+    }
+
 }
